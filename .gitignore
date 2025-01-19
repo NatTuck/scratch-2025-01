@@ -1,0 +1,9 @@
+
+# C/C++
+.o
+
+# Python
+.pyo
+
+# Node
+node_modules/
