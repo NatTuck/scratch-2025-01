@@ -4,6 +4,8 @@
 
 # Python
 .pyo
+.pyc
+**/__pycache__/
 
 # Node
 node_modules/
