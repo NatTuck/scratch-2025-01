@@ -59,69 +59,9 @@ def ssort(xs: list[int]) -> None:
         p = xs[done]
         xs[done] = xs[smallest_idx]
         xs[smallest_idx] = p
-
-
-def merge(xs, ys):
-    zs = []
-
-    ii = 0 # position in xs
-    jj = 0 # position in ys
-    
-    while ii < len(xs) or jj < len(ys):
-        if ii >= len(xs):
-            zs += ys[jj:]
-            break
         
-        if jj >= len(ys):
-            zs += xs[ii:]
-            break
+                
         
-        if xs[ii] < ys[jj]:
-            # take next item from xs
-            zs.append(xs[ii])
-            ii += 1
-        else:
-            # take next item from ys
-            zs.append(ys[jj])
-            jj += 1
-  
-    return zs
-        
-
-    
-def merge_sort(xs):
-    sz = len(xs)
-    
-    if sz <= 1:
-        return xs
-    
-    mid = sz // 2
-    
-    ys0 = merge_sort(xs[0:mid])
-    ys1 = merge_sort(xs[mid:sz])
-    
-    return merge(ys0, ys1)
-    
-    
-from math import log
-
-def nsquared(n):
-    return n * n
-
-def nlogn(n):
-    return n * log(n, 2)
-
-print("n\tn*n\tn*log n")
-
-for j in range(1, 21):
-    i = j * 100
-    print(i, "\t", nsquared(i), "\t", round(nlogn(i))) 
-
-
-
-
-
-    
     
     
     
