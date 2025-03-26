@@ -9,6 +9,11 @@
 
 #include "xmalloc.h"
 
+typedef struct alloc_header {
+    int size;
+    int thread_id;
+};
+
 typedef struct size24_block {
     size_t size;
     struct size24_block* next;
@@ -16,6 +21,7 @@ typedef struct size24_block {
 } size24_block;
 
 static __thread size24_block* size24s = 0;
+size_24_block* remote_inbox[100]; 
 
 /*
 typedef struct size72_block {
