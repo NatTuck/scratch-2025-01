@@ -20,9 +20,14 @@ typedef struct op_node {
 #define VAL_KIND 10
 #define OP_KIND 11
 
+#include "vec.h"
+
 val_node* new_val(int val);
 op_node* new_op(char op, node* left, node* right);
 void free_node(node* node);
 void print_tree(node* node);
+
+node* parse(vec* toks);
+int eval(node* nn);
 
 #endif

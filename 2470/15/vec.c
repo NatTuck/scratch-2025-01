@@ -42,7 +42,7 @@ print_vec(vec* xs)
 vec*
 tokenize(char* text)
 {
-    vec* ys = new_vec(10);
+    vec* ys = new_vec(100);
 
     char tmp[100];
     tmp[0] = 0;
