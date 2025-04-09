@@ -3,7 +3,9 @@ import re
 
 class BoolExpr:
     def simplify(self):
-        # FIXME: This should do stuff.
+        return self.eliminate_literals()
+
+    def eliminate_literals(self):
         return self
 
 
@@ -12,7 +14,7 @@ class Var(BoolExpr):
         self.name = name
 
     def __eq__(self, other):
-        return other is Var and self.name == other.name
+        return type(other) is Var and self.name == other.name
 
     def __repr__(self):
         return self.name
@@ -23,7 +25,7 @@ class Lit(BoolExpr):
         self.val = val
 
     def __eq__(self, other):
-        return other is Lit and self.val == other.val
+        return type(other) is Lit and self.val == other.val
 
     def __repr__(self):
         return self.val
@@ -34,10 +36,21 @@ class Not(BoolExpr):
         self.expr = expr
 
     def __eq__(self, other):
-        return other is Not and self.expr == other.expr
+        return type(other) is Not and self.expr == other.expr
 
     def __repr__(self):
         return f"!{self.expr}"
+
+    def eliminate_literals(self):
+        expr1 = self.expr.eliminate_literals()
+
+        if expr1 == Lit("0"):
+            return Lit("1")
+
+        if expr1 == Lit("1"):
+            return Lit("0")
+
+        return Not(expr1)
 
 
 class And(BoolExpr):
@@ -45,11 +58,29 @@ class And(BoolExpr):
         self.exprs = exprs
 
     def __eq__(self, other):
-        return other is And and self.exprs == other.exprs
+        return type(other) is And and self.exprs == other.exprs
 
     def __repr__(self):
         text = "".join(map(str, self.exprs))
         return f"({text})"
+    
+    def eliminate_literals(self):
+        ys = []
+
+        for expr in self.exprs:
+            expr = expr.eliminate_literals()
+            if type(expr) is Lit:
+                if expr.val == '0':
+                    return Lit('0')
+                # Skip any Lit('1')
+            else:
+                ys.append(expr)
+
+        if len(ys) == 0:
+            return Lit("1")
+
+        return And(ys)
+
 
 
 class Or(BoolExpr):
@@ -57,12 +88,25 @@ class Or(BoolExpr):
         self.exprs = exprs
 
     def __eq__(self, other):
-        return other is Or and self.exprs == other.exprs
+        return type(other) is Or and self.exprs == other.exprs
 
     def __repr__(self):
         text = "+".join(map(str, self.exprs))
         return f"({text})"
 
+    def eliminate_literals(self):
+        ys = []
+
+        for expr in self.exprs:
+            expr = expr.eliminate_literals()
+            if type(expr) is Lit:
+                if expr.val == '1':
+                    return Lit('1')
+                # skip any Lit('0')
+            else: 
+                ys.append(expr)
+
+        return Or(ys)
 
 def next_group(text):
     count = 1
@@ -89,7 +133,7 @@ def parse_one(text):
     if mm := re.match(r"[!]", text):
         (arg, rest) = parse_one(text[1:])
         if arg:
-            print(f"not arg: {arg} ({rest})")
+            #print(f"not arg: {arg} ({rest})")
             return (Not(arg), rest)
         else:
             raise Exception("no arg for not")
