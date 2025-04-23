@@ -1,0 +1,3 @@
+This is hello.txt
+
+from the notes directory.
