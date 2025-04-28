@@ -10,7 +10,7 @@ for my $course (@courses) {
     for my $path (@paths) {
         chomp $path;
         my $type = `file "$path"`; 
-        if ($type =~ /ELF 64-bit/) {
+        if ($type =~ /ELF 64-bit/ || $type =~ /compiled Java class data/) {
             say("[$path] $type"); 
             if (length($path) > 5) {
                 system(qq{rm -v "$path"});
