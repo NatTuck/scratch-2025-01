@@ -66,6 +66,12 @@ main(int argc, char* argv[])
             buffer[bytes_read] = '\0';
             printf("Received: %s", buffer);
 
+            for (int ii = 0; buffer[ii]; ++ii) {
+                if (buffer[ii] == 'e') {
+                    buffer[ii] = 'E';
+                }
+            }
+
             // Echo back
             write(client_fd, buffer, bytes_read);
 
